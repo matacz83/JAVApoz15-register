@@ -16,9 +16,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ModelAndView usersListView(@RequestParam(required = false) String firstName) {
+    public ModelAndView usersListView(@RequestParam(required = false) String firstName, @RequestParam(required = false) boolean matchExact) {
         ModelAndView modelAndView = new ModelAndView("users");
-        modelAndView.addObject("users", userService.findAllUserNames(firstName));
+        modelAndView.addObject("users", userService.findAllUserNames(firstName, matchExact));
         return modelAndView;
     }
 
@@ -45,6 +45,12 @@ public class UserController {
     @PostMapping("/user")
     public String addUser(@ModelAttribute User user) {
         userService.addUser(user);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/user/delete/{username}")
+    public String deleteUser(@PathVariable String username) {
+        userService.deleteUser(username);
         return "redirect:/users";
     }
 }

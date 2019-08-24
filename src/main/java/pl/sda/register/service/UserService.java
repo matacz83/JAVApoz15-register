@@ -15,8 +15,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Set<String> findAllUserNames(String firstName) {
-        return userRepository.findAllUserNames(firstName);
+    public Set<String> findAllUserNames(String firstName, boolean matchExact) {
+        return userRepository.findAllUserNames(firstName, matchExact);
     }
 
     public User findUserByUserName(String username) {
@@ -25,5 +25,9 @@ public class UserService {
 
     public void addUser(User user) {
         userRepository.addUser(user);
+    }
+
+    public void deleteUser(String username) {
+        userRepository.deleteUser(username);
     }
 }

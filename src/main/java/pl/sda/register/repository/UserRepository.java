@@ -20,14 +20,21 @@ public class UserRepository {
         return new HashSet<>(Arrays.asList(new User("login", "Captain", "Jack")));
     }
 
-    public Set<String> findAllUserNames(String firstName) {
+    public Set<String> findAllUserNames(String firstName, boolean matchExact) {
         if (firstName == null) {
             return users.stream().map(User::getUsername).collect(Collectors.toSet());
         }
-        return users.stream()
-                .filter(user -> user.getFirstName().equals(firstName))
-                .map(User::getUsername)
-                .collect(Collectors.toSet());
+        if (matchExact) {
+            return users.stream()
+                    .filter(user -> user.getFirstName().equals(firstName))
+                    .map(User::getUsername)
+                    .collect(Collectors.toSet());
+        } else {
+            return users.stream()
+                    .filter(user -> user.getFirstName().contains(firstName))
+                    .map(User::getUsername)
+                    .collect(Collectors.toSet());
+        }
     }
 
     public User findUserByUsername(String username) {
@@ -43,11 +50,13 @@ public class UserRepository {
         if (any.isPresent()) {
             throw new DuplicatedUsernameException("User with username: " + user.getUsername() + " already exists");
         }
-//        for (User actualUser : users) {
-//            if (actualUser.getUsername().equals(user.getUsername())) {
-//                throw new DuplicatedUsernameException("User with username: " + user.getUsername() + " already exists");
-//            }
-//        }
         users.add(user);
+    }
+
+    public void deleteUser(String username) {
+        users.stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findAny()
+                .ifPresent(user -> users.remove(user));
     }
 }
