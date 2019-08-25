@@ -50,6 +50,12 @@ public class UserRepository {
         if (any.isPresent()) {
             throw new DuplicatedUsernameException("User with username: " + user.getUsername() + " already exists");
         }
+        //ALTERNATIVE WAY
+//        for (User actualUser : users) {
+//            if (actualUser.getUsername().equals(user.getUsername())) {
+//                throw new DuplicatedUsernameException("User with username: " + user.getUsername() + " already exists");
+//            }
+//        }
         users.add(user);
     }
 
@@ -58,5 +64,11 @@ public class UserRepository {
                 .filter(user -> user.getUsername().equals(username))
                 .findAny()
                 .ifPresent(user -> users.remove(user));
+    }
+
+    public void updateUser(User user) {
+        User foundUser = findUserByUsername(user.getUsername());
+        users.remove(foundUser);
+        users.add(user);
     }
 }
